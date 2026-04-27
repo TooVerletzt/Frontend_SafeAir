@@ -1,0 +1,303 @@
+@use 'tokens/index' as tokens;
+
+:host {
+  display: block;
+}
+
+.section-page {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 13.6rem minmax(0, 1fr);
+  background:
+    radial-gradient(circle at 45% -12%, rgba(tokens.$color-accent, 0.08) 0%, rgba(tokens.$color-bg, 0) 48%),
+    linear-gradient(180deg, #151627 0%, #131426 100%),
+    tokens.$color-bg;
+}
+
+.section-page__sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+}
+
+.section-page__main {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.rooms-config {
+  padding: 1.2rem 1rem 1.35rem;
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+}
+
+.rooms-config__header {
+  h1 {
+    margin: 0;
+    color: tokens.$color-text-primary;
+    font-size: 2.7rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0.15rem 0 0;
+    color: tokens.$color-text-muted;
+    font-size: 1.05rem;
+  }
+}
+
+.rooms-config__limit {
+  margin: 0;
+  color: tokens.$color-text-muted;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.rooms-config__limit.is-blocked {
+  color: #ffc96a;
+}
+
+.rooms-config__limit-warning {
+  margin: 0;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(#ffc96a, 0.55);
+  background: rgba(#ffc96a, 0.14);
+  color: #ffe0a5;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.78rem;
+}
+
+.rooms-config__grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: minmax(0, 1.03fr) minmax(0, 1.75fr);
+}
+
+.rooms-config__panel {
+  border-radius: 0.8rem;
+  border: 1px solid rgba(tokens.$color-border, 0.75);
+  background: #1d1f2f;
+  padding: 0.95rem;
+}
+
+.rooms-config__panel-title {
+  margin: 0 0 0.65rem;
+  color: tokens.$color-accent;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+
+.rooms-config__label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: tokens.$color-text-muted;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+}
+
+.rooms-config__input {
+  width: 100%;
+  min-height: 2.35rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(tokens.$color-border, 0.8);
+  background: #101123;
+  color: tokens.$color-text-primary;
+  padding: 0 0.75rem;
+  margin-bottom: 0.45rem;
+}
+
+.rooms-config__error {
+  margin: 0;
+  color: tokens.$color-danger;
+  font-size: 0.78rem;
+}
+
+.rooms-config__area-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 0.45rem;
+
+  strong {
+    color: tokens.$color-text-primary;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+}
+
+.rooms-config__slider {
+  width: 100%;
+  accent-color: tokens.$color-accent;
+}
+
+.rooms-config__ticks {
+  display: flex;
+  justify-content: space-between;
+  color: tokens.$color-text-muted;
+  font-size: 0.62rem;
+  margin-bottom: 0.7rem;
+}
+
+.rooms-config__windows {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.rooms-config__stepper {
+  min-height: 2.5rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(tokens.$color-border, 0.75);
+  background: #101123;
+  display: grid;
+  grid-template-columns: 2.8rem 1fr 2.8rem;
+  align-items: center;
+
+  button {
+    min-height: 2.5rem;
+    border: 0;
+    background: transparent;
+    color: tokens.$color-accent;
+    font-size: 1.55rem;
+    cursor: pointer;
+  }
+
+  strong {
+    text-align: center;
+    color: tokens.$color-text-primary;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+  }
+}
+
+.rooms-config__panel--actuators {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.rooms-config__panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.rooms-config__slots {
+  border-radius: 99rem;
+  border: 1px solid rgba(tokens.$color-accent, 0.45);
+  background: rgba(tokens.$color-accent, 0.12);
+  color: tokens.$color-accent;
+  min-height: 1.55rem;
+  padding: 0 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.67rem;
+  font-weight: 800;
+}
+
+.rooms-config__actuators-grid {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.rooms-config__actions {
+  display: grid;
+  justify-items: end;
+  gap: 0.45rem;
+}
+
+.rooms-config__validation {
+  border-radius: 0.55rem;
+  border: 1px solid rgba(tokens.$color-danger, 0.45);
+  background: rgba(tokens.$color-danger, 0.12);
+  color: #ffc4c4;
+  padding: 0.55rem 0.65rem;
+
+  p {
+    margin: 0;
+    font-size: 0.74rem;
+    font-weight: 600;
+  }
+
+  ul {
+    margin: 0.35rem 0 0;
+    padding-left: 1rem;
+    font-size: 0.72rem;
+    display: grid;
+    gap: 0.2rem;
+  }
+}
+
+.rooms-config__save {
+  min-width: 12rem;
+  min-height: 2.55rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(tokens.$color-accent, 0.45);
+  background: rgba(tokens.$color-accent, 0.16);
+  color: tokens.$color-accent;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.rooms-config__existing {
+  border-radius: 0.8rem;
+  border: 1px solid rgba(tokens.$color-border, 0.72);
+  background: #101123;
+  min-height: 5rem;
+  padding: 0.85rem;
+
+  h3 {
+    margin: 0;
+    color: tokens.$color-text-secondary;
+    font-size: 0.95rem;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0.7rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    color: tokens.$color-text-muted;
+    font-size: 0.78rem;
+  }
+
+  strong {
+    color: tokens.$color-text-primary;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section-page {
+    grid-template-columns: 1fr;
+  }
+
+  .section-page__sidebar {
+    position: static;
+  }
+
+  .rooms-config__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rooms-config__actuators-grid {
+    grid-template-columns: 1fr;
+  }
+}

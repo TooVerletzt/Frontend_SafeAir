@@ -1,0 +1,65 @@
+<form class="register-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <sa-form-input
+    id="register-fullname"
+    label="NOMBRE COMPLETO"
+    placeholder="Ingresa tu nombre completo"
+    leftIconSrc="assets/icons/user.png"
+    [control]="fullNameControl"
+    [error]="getFullNameError()"
+  />
+
+  <sa-form-input
+    id="register-lastname"
+    label="APELLIDOS"
+    placeholder="Ingresa tus apellidos"
+    leftIconSrc="assets/icons/apellidos.png"
+    [control]="lastNameControl"
+    [error]="getLastNameError()"
+  />
+
+  <sa-form-input
+    id="register-email"
+    label="CORREO ELECTR&Oacute;NICO"
+    type="email"
+    autocomplete="email"
+    placeholder="nombre@empresa.com"
+    leftIconSrc="assets/icons/correo.png"
+    [control]="emailControl"
+    [error]="getEmailError()"
+  />
+
+  <sa-password-input
+    id="register-password"
+    label="CONTRASE&Ntilde;A"
+    placeholder="********"
+    leftIconSrc="assets/icons/candado.png"
+    eyeIconSrc="assets/icons/ojo.png"
+    [control]="passwordControl"
+    [error]="getPasswordError()"
+  />
+
+  <sa-password-input
+    id="register-confirm-password"
+    label="CONFIRMAR CONTRASE&Ntilde;A"
+    placeholder="********"
+    leftIconSrc="assets/icons/escudo.png"
+    eyeIconSrc="assets/icons/ojo.png"
+    [control]="confirmPasswordControl"
+    [error]="getConfirmPasswordError()"
+  />
+
+  <p *ngIf="formError" class="register-form__error" role="alert">{{ formError }}</p>
+
+  <sa-primary-button
+    type="submit"
+    [label]="submitLabel"
+    [loading]="loading"
+    [disabled]="form.invalid || loading"
+    rightGlyph="&#8594;"
+  />
+
+  <p class="register-form__login-hint">
+    &iquest;Ya tienes cuenta?
+    <sa-auth-link to="/auth/login" label="Iniciar sesi&oacute;n" />
+  </p>
+</form>

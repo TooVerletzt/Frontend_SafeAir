@@ -1,0 +1,116 @@
+@use 'tokens/index' as tokens;
+
+.widget-card {
+  border-radius: 1.05rem;
+  border: 1px solid rgba(tokens.$color-border, 0.68);
+  background: linear-gradient(160deg, #282a3d 0%, #222437 62%, #1f2133 100%);
+  box-shadow: 0 18px 36px rgba(8, 9, 18, 0.28);
+  min-height: 18rem;
+  padding: 1rem 1.05rem;
+  display: grid;
+  align-content: start;
+  gap: 1.1rem;
+}
+
+.widget-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    margin: 0;
+    color: tokens.$color-text-primary;
+    font-size: 1.02rem;
+  }
+
+  span {
+    color: tokens.$color-accent;
+    font-weight: 700;
+  }
+}
+
+.temperature-widget {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 1.8rem;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(1rem);
+}
+
+.temperature-widget__left {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.temperature-widget__tube {
+  width: 2.2rem;
+  height: 12.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(tokens.$color-border, 0.8);
+  background: linear-gradient(180deg, rgba(#171a2a, 0.98), rgba(#101322, 0.92));
+  position: relative;
+  overflow: hidden;
+}
+
+.temperature-widget__fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(180deg, #bcffef 0%, tokens.$color-accent 100%);
+  box-shadow: 0 0 16px rgba(tokens.$color-accent, 0.34);
+  transition: height 0.8s ease;
+}
+
+.temperature-widget__scale {
+  height: 12.8rem;
+  display: grid;
+  align-content: space-between;
+
+  span {
+    color: rgba(tokens.$color-text-muted, 0.9);
+    font-size: 0.67rem;
+    font-weight: 700;
+  }
+}
+
+.temperature-widget__meta {
+  display: grid;
+  gap: 0.45rem;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.temperature-widget__value {
+  margin: 0;
+  color: #f8fbff;
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.temperature-widget__label {
+  margin: 0;
+  color: rgba(tokens.$color-text-muted, 0.9);
+  font-size: 0.78rem;
+}
+
+.temperature-widget__state {
+  margin: 0;
+  width: fit-content;
+  min-height: 1.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(tokens.$color-accent, 0.45);
+  background: rgba(tokens.$color-accent, 0.13);
+  color: #defff4;
+  padding: 0 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+}

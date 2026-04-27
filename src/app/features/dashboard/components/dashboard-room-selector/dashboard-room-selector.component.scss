@@ -1,0 +1,52 @@
+@use 'tokens/index' as tokens;
+
+.room-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.room-selector__pill {
+  min-height: 2.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(tokens.$color-border, 0.78);
+  background: linear-gradient(165deg, rgba(#24263a, 0.95), rgba(#1f2132, 0.95));
+  color: tokens.$color-text-secondary;
+  padding: 0.35rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: rgba(tokens.$color-accent, 0.45);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(8, 10, 22, 0.35);
+  }
+}
+
+.room-selector__pill.is-active {
+  border-color: rgba(tokens.$color-accent, 0.82);
+  background: linear-gradient(165deg, rgba(tokens.$color-accent, 0.2), rgba(#2a3045, 0.95));
+  color: #eafff8;
+  box-shadow: 0 0 0 1px rgba(tokens.$color-accent, 0.2), 0 12px 28px rgba(6, 22, 22, 0.32);
+}
+
+.room-selector__name {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.room-selector__status {
+  border-radius: 99rem;
+  border: 1px solid rgba(tokens.$color-accent, 0.4);
+  background: rgba(tokens.$color-accent, 0.14);
+  color: tokens.$color-accent;
+  min-height: 1.45rem;
+  padding: 0 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+}

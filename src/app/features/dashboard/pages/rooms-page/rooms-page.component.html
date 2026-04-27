@@ -1,0 +1,133 @@
+<section class="section-page" *ngIf="viewModel$ | async as vm">
+  <sa-dashboard-sidebar class="section-page__sidebar" [user]="vm.user" />
+
+  <section class="section-page__main">
+    <sa-dashboard-topbar [locationLabel]="'Room Configuration'" />
+
+    <section class="rooms-config">
+      <header class="rooms-config__header">
+        <h1>Smart Space Inventory</h1>
+        <p>Configuracion de habitaciones</p>
+      </header>
+
+      <p class="rooms-config__limit" [class.is-blocked]="!hasRoomCapacity()">
+        {{ vm.rooms.length }}/{{ maxRoomsPerDashboard }} habitaciones configuradas
+      </p>
+      <p class="rooms-config__limit-warning" *ngIf="!hasRoomCapacity()">
+        Limite alcanzado: no puedes guardar mas de 3 habitaciones por dashboard.
+      </p>
+
+      <form class="rooms-config__grid" [formGroup]="form" (ngSubmit)="onSaveRoom()" novalidate>
+        <article class="rooms-config__panel rooms-config__panel--properties">
+          <h2 class="rooms-config__panel-title">ROOM PROPERTIES</h2>
+
+          <label class="rooms-config__label" for="room-name">ROOM DESIGNATION</label>
+          <input
+            id="room-name"
+            class="rooms-config__input"
+            formControlName="roomName"
+            placeholder="e.g Lab_Alpha_01"
+            maxlength="40"
+          />
+          <p class="rooms-config__error" *ngIf="roomNameControl.invalid && (roomNameControl.dirty || roomNameControl.touched)">
+            El nombre es requerido y debe tener al menos 2 caracteres.
+          </p>
+
+          <div class="rooms-config__area-row">
+            <span class="rooms-config__label">TOTAL AREA</span>
+            <strong>{{ areaControl.value }} m2</strong>
+          </div>
+          <input
+            class="rooms-config__slider"
+            type="range"
+            min="1"
+            max="300"
+            [value]="areaControl.value"
+            (input)="onAreaSliderChange($any($event.target).value)"
+          />
+          <div class="rooms-config__ticks">
+            <span>1m2</span>
+            <span>150m2</span>
+            <span>300m2</span>
+          </div>
+
+          <div class="rooms-config__windows">
+            <span class="rooms-config__label">APERTURES (WINDOWS)</span>
+            <div class="rooms-config__stepper">
+              <button type="button" (click)="incrementWindows(-1)">-</button>
+              <strong>{{ windowsControl.value < 10 ? '0' + windowsControl.value : windowsControl.value }}</strong>
+              <button type="button" (click)="incrementWindows(1)">+</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="rooms-config__panel rooms-config__panel--actuators">
+          <div class="rooms-config__panel-header">
+            <h2 class="rooms-config__panel-title">ACTUATORS CONFIGURATION</h2>
+            <span class="rooms-config__slots">{{ form.controls.minisplitQty.value + form.controls.purifierQty.value + form.controls.extractorQty.value }} ACTIVE SLOTS</span>
+          </div>
+
+          <div class="rooms-config__actuators-grid">
+            <sa-room-actuator-card
+              type="minisplit"
+              title="MiniSplit"
+              subtitle="THERMAL REGULATION"
+              iconSrc="assets/icons/temperatura.png"
+              [quantity]="form.controls.minisplitQty.value"
+              [size]="form.controls.minisplitSize.value"
+              [showError]="shouldShowActuatorError('minisplit')"
+              (quantityChange)="setActuatorQuantity('minisplit', $event)"
+              (sizeChange)="setActuatorSize('minisplit', $event)"
+            />
+
+            <sa-room-actuator-card
+              type="purifier"
+              title="Purf"
+              subtitle="AEROSOL MANAGEMENT"
+              iconSrc="assets/icons/humedad.png"
+              [quantity]="form.controls.purifierQty.value"
+              [size]="form.controls.purifierSize.value"
+              [showError]="shouldShowActuatorError('purifier')"
+              (quantityChange)="setActuatorQuantity('purifier', $event)"
+              (sizeChange)="setActuatorSize('purifier', $event)"
+            />
+
+            <sa-room-actuator-card
+              type="extractor"
+              title="Extractor"
+              subtitle="EXHAUST SYSTEMS"
+              iconSrc="assets/icons/actuador.png"
+              [quantity]="form.controls.extractorQty.value"
+              [size]="form.controls.extractorSize.value"
+              [showError]="shouldShowActuatorError('extractor')"
+              (quantityChange)="setActuatorQuantity('extractor', $event)"
+              (sizeChange)="setActuatorSize('extractor', $event)"
+            />
+          </div>
+
+          <div class="rooms-config__validation" *ngIf="missingActuatorTypes.length > 0 && (saveAttempted || form.touched)">
+            <p>Cada actuador debe tener entre 1 y 3 unidades al guardar:</p>
+            <ul>
+              <li *ngFor="let type of missingActuatorTypes">{{ actuatorLabel(type) }}</li>
+            </ul>
+          </div>
+
+          <div class="rooms-config__actions">
+            <p class="rooms-config__error" *ngIf="saveError">{{ saveError }}</p>
+            <button class="rooms-config__save" type="submit" [disabled]="!hasRoomCapacity()">Guardar cuarto</button>
+          </div>
+        </article>
+      </form>
+
+      <section class="rooms-config__existing" *ngIf="vm.rooms.length > 0">
+        <h3>Habitaciones creadas</h3>
+        <ul>
+          <li *ngFor="let room of vm.rooms">
+            <strong>{{ room.name }}</strong>
+            <span>{{ room.areaM2 }} m2 · {{ room.windowsCount }} ventanas</span>
+          </li>
+        </ul>
+      </section>
+    </section>
+  </section>
+</section>

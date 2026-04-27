@@ -1,0 +1,39 @@
+<form class="login-form" (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+  <sa-form-input
+    id="login-email"
+    label="Correo electronico"
+    type="email"
+    autocomplete="email"
+    placeholder="nombre@empresa.com"
+    leftIconSrc="assets/icons/correo.png"
+    [control]="identifierControl"
+    [error]="getIdentifierError()"
+  />
+
+  <sa-password-input
+    id="login-password"
+    label="Contrasena"
+    placeholder="********"
+    leftIconSrc="assets/icons/candado.png"
+    eyeIconSrc="assets/icons/ojo.png"
+    [control]="passwordControl"
+    [error]="getPasswordError()"
+  />
+
+  <p *ngIf="error" class="login-form__error" role="alert">{{ error.message }}</p>
+
+  <sa-primary-button
+    type="submit"
+    label="Iniciar sesi&oacute;n"
+    [loading]="loading"
+    [disabled]="form.invalid || loading"
+  />
+
+  <div class="login-form__links">
+    <a class="login-form__forgot" href="#">&iquest;Olvidaste tu contrase&ntilde;a?</a>
+    <p class="login-form__register">
+      &iquest;A&uacute;n no tienes cuenta?
+      <sa-auth-link to="/auth/register" label="Crear una cuenta" />
+    </p>
+  </div>
+</form>

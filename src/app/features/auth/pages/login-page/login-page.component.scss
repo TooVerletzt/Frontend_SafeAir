@@ -1,0 +1,12 @@
+@use 'tokens/index' as tokens;
+
+:host {
+  display: block;
+}
+
+.login-page__success {
+  margin: tokens.$space-4 0 0;
+  text-align: center;
+  color: tokens.$color-accent;
+  font-size: 0.92rem;
+}

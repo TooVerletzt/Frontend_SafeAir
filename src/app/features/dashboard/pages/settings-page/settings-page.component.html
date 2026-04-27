@@ -1,0 +1,12 @@
+<section class="section-page" *ngIf="viewModel$ | async as vm">
+  <sa-dashboard-sidebar class="section-page__sidebar" [user]="vm.user" />
+
+  <section class="section-page__main">
+    <sa-dashboard-topbar [locationLabel]="'Settings'" />
+
+    <section class="section-page__content">
+      <h1>Settings</h1>
+      <p>Seccion placeholder: aqui se mostrara la configuracion general del sistema.</p>
+    </section>
+  </section>
+</section>

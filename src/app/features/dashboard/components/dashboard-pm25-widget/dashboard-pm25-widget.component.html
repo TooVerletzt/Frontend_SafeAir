@@ -1,0 +1,39 @@
+<article class="widget-card">
+  <header class="widget-card__header">
+    <h3>PM2.5</h3>
+    <span class="widget-card__unit">μg/m³</span>
+  </header>
+
+  <div class="widget-card__metrics">
+    <p class="widget-card__value">{{ pm25UgM3 | number: '1.0-0' }} <small>μg/m³</small></p>
+    <p class="widget-card__trend" [class.is-up]="trendTone === 'up'" [class.is-down]="trendTone === 'down'">
+      {{ trendLabel }}
+    </p>
+  </div>
+
+  <svg class="widget-card__sparkline" viewBox="0 0 240 112" aria-hidden="true">
+    <defs>
+      <linearGradient id="pm25AreaGradient" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#9cf8e1" stop-opacity="0.48"></stop>
+        <stop offset="100%" stop-color="#9cf8e1" stop-opacity="0"></stop>
+      </linearGradient>
+    </defs>
+
+    <g class="widget-card__grid">
+      <g *ngFor="let tick of yTicks">
+        <line x1="20" [attr.y1]="tick.y" x2="234" [attr.y2]="tick.y"></line>
+        <text x="2" [attr.y]="tick.y + 2">{{ tick.value }}</text>
+      </g>
+    </g>
+
+    <path class="widget-card__area" [attr.d]="areaPath"></path>
+    <path class="widget-card__line" [attr.d]="sparklinePath"></path>
+
+    <line class="widget-card__axis-line" x1="20" y1="6" x2="20" y2="94"></line>
+    <line class="widget-card__axis-line" x1="20" y1="94" x2="234" y2="94"></line>
+
+    <g class="widget-card__x-axis">
+      <text *ngFor="let tick of xTicks" [attr.x]="tick.x" y="108">{{ tick.label }}</text>
+    </g>
+  </svg>
+</article>

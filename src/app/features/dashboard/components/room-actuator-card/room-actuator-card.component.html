@@ -1,0 +1,46 @@
+<article class="actuator-card" [class.actuator-card--active]="isActive" [class.actuator-card--error]="showError">
+  <div class="actuator-card__header">
+    <div class="actuator-card__icon-wrap">
+      <img [src]="iconSrc" [alt]="title" class="actuator-card__icon" />
+    </div>
+
+    <span class="actuator-card__selected" *ngIf="isActive">SELECTED</span>
+  </div>
+
+  <h3 class="actuator-card__title">{{ title }}</h3>
+  <p class="actuator-card__subtitle">{{ subtitle }}</p>
+
+  <div class="actuator-card__section">
+    <span class="actuator-card__section-label">SYSTEM QUANTITY</span>
+
+    <div class="actuator-card__segmented">
+      <button
+        type="button"
+        *ngFor="let item of quantities"
+        class="actuator-card__segment"
+        [class.actuator-card__segment--active]="quantity === item"
+        (click)="setQuantity(item)">
+        {{ item }}
+      </button>
+    </div>
+  </div>
+
+  <div class="actuator-card__section">
+    <span class="actuator-card__section-label">CHASSIS SIZE</span>
+
+    <div class="actuator-card__segmented">
+      <button
+        type="button"
+        *ngFor="let item of sizes"
+        class="actuator-card__segment"
+        [class.actuator-card__segment--active]="size === item"
+        (click)="setSize(item)">
+        {{ labelForSize(item) }}
+      </button>
+    </div>
+  </div>
+
+  <p class="actuator-card__hint" *ngIf="showError">
+    Cada actuador debe tener entre 1 y 3 unidades.
+  </p>
+</article>

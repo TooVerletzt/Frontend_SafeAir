@@ -1,0 +1,49 @@
+@use 'tokens/index' as tokens;
+
+.login-form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.login-form__error {
+  margin: -0.2rem 0 0;
+  color: tokens.$color-danger;
+  font-size: 0.92rem;
+}
+
+.login-form__links {
+  display: grid;
+  gap: 1.05rem;
+  justify-items: center;
+  text-align: center;
+  margin-top: 0.2rem;
+}
+
+.login-form__forgot {
+  color: tokens.$color-accent;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 700;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+  }
+}
+
+.login-form__register {
+  margin: 0;
+  color: tokens.$color-text-muted;
+  font-size: 1rem;
+}
+
+@media (max-width: 640px) {
+  .login-form {
+    gap: 1rem;
+  }
+
+  .login-form__forgot,
+  .login-form__register {
+    font-size: 0.94rem;
+  }
+}
