@@ -12,8 +12,11 @@ import { DecimalPipe } from '@angular/common';
 export class DashboardTemperatureWidgetComponent {
   @Input({ required: true }) temperatureC = 22;
 
+  readonly minTemperatureC = 18;
+  readonly maxTemperatureC = 32;
+
   get fillHeightPct(): number {
-    const normalized = ((this.temperatureC - 18) / (32 - 18)) * 100;
+    const normalized = ((this.temperatureC - this.minTemperatureC) / (this.maxTemperatureC - this.minTemperatureC)) * 100;
     return Math.max(0, Math.min(100, normalized));
   }
 

@@ -1,5 +1,10 @@
 @use 'tokens/index' as tokens;
 
+:host {
+  display: block;
+  height: 100%;
+}
+
 .widget-card {
   border-radius: 1.05rem;
   border: 1px solid rgba(tokens.$color-border, 0.68);
@@ -10,6 +15,7 @@
   display: grid;
   align-content: start;
   gap: 0.7rem;
+  height: 100%;
 }
 
 .widget-card__header {

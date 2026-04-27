@@ -17,10 +17,8 @@
       *ngFor="let item of menuItems"
       class="dashboard-sidebar__nav-item"
       [routerLink]="item.to"
-      routerLinkActive="is-active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      #rla="routerLinkActive"
-      [attr.aria-current]="rla.isActive ? 'page' : null"
+      [class.is-active]="isItemActive(item)"
+      [attr.aria-current]="isItemActive(item) ? 'page' : null"
     >
       <img class="dashboard-sidebar__nav-icon" [src]="item.iconSrc" alt="" aria-hidden="true" />
       <span>{{ item.label }}</span>

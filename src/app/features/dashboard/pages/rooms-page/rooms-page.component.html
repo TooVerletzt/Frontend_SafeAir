@@ -10,9 +10,12 @@
         <p>Configuracion de habitaciones</p>
       </header>
 
-      <p class="rooms-config__limit" [class.is-blocked]="!hasRoomCapacity()">
-        {{ vm.rooms.length }}/{{ maxRoomsPerDashboard }} habitaciones configuradas
-      </p>
+      <section class="rooms-config__meta">
+        <p class="rooms-config__limit" [class.is-blocked]="!hasRoomCapacity()">
+          {{ vm.rooms.length }}/{{ maxRoomsPerDashboard }} habitaciones configuradas
+        </p>
+        <p class="rooms-config__meta-hint">Organiza cada cuarto con parametros fisicos y actuadores de control.</p>
+      </section>
       <p class="rooms-config__limit-warning" *ngIf="!hasRoomCapacity()">
         Limite alcanzado: no puedes guardar mas de 3 habitaciones por dashboard.
       </p>
@@ -123,7 +126,10 @@
         <h3>Habitaciones creadas</h3>
         <ul>
           <li *ngFor="let room of vm.rooms">
-            <strong>{{ room.name }}</strong>
+            <div class="rooms-config__existing-room">
+              <strong>{{ room.name }}</strong>
+              <small>ID: {{ room.id }}</small>
+            </div>
             <span>{{ room.areaM2 }} m2 · {{ room.windowsCount }} ventanas</span>
           </li>
         </ul>

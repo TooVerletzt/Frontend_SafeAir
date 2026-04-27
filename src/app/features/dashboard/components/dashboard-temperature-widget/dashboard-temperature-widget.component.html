@@ -6,8 +6,14 @@
 
   <div class="temperature-widget">
     <div class="temperature-widget__left" aria-hidden="true">
-      <div class="temperature-widget__tube">
-        <div class="temperature-widget__fill" [style.height.%]="fillHeightPct"></div>
+      <div class="temperature-widget__thermometer">
+        <div class="temperature-widget__stem">
+          <div class="temperature-widget__stem-fill" [style.height.%]="fillHeightPct"></div>
+        </div>
+
+        <div class="temperature-widget__bulb">
+          <div class="temperature-widget__bulb-core"></div>
+        </div>
       </div>
 
       <div class="temperature-widget__scale">
@@ -19,7 +25,7 @@
 
     <div class="temperature-widget__meta">
       <p class="temperature-widget__value">{{ temperatureC | number: '1.1-1' }}°C</p>
-      <p class="temperature-widget__label">Promedio instantaneo</p>
+      <p class="temperature-widget__label">Promedio instantáneo</p>
       <p class="temperature-widget__state">{{ statusLabel }}</p>
     </div>
   </div>

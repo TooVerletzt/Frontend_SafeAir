@@ -76,10 +76,12 @@
 
 .dashboard-grid__item--co2 {
   grid-area: co2;
+  display: block;
 }
 
 .dashboard-grid__item--pm25 {
   grid-area: pm25;
+  display: block;
 }
 
 .section-page__empty {

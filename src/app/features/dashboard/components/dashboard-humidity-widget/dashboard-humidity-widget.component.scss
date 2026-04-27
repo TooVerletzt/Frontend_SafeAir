@@ -48,13 +48,41 @@
   stroke-linecap: round;
 }
 
+.humidity-widget__progress-glow {
+  fill: none;
+  stroke: #9cf8e1;
+  stroke-width: 16;
+  stroke-opacity: 0.2;
+  stroke-linecap: round;
+}
+
 .humidity-widget__progress {
   fill: none;
   stroke: #9cf8e1;
   stroke-width: 11;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 10px rgba(112, 255, 217, 0.4));
   transition: stroke-dashoffset 0.8s ease;
+}
+
+.humidity-widget__needle {
+  stroke: #e8fff9;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 10px rgba(112, 255, 217, 0.85));
+}
+
+.humidity-widget__marker-halo {
+  fill: rgba(169, 255, 236, 0.38);
+  stroke: rgba(224, 255, 249, 0.98);
+  stroke-width: 1.35;
+  filter: drop-shadow(0 0 11px rgba(112, 255, 217, 0.9));
+}
+
+.humidity-widget__marker-dot {
+  fill: #f8fffd;
+  stroke: #74ffe4;
+  stroke-width: 1.1;
+  filter: drop-shadow(0 0 10px rgba(112, 255, 217, 0.95));
 }
 
 .humidity-widget__center {

@@ -32,7 +32,7 @@
 .temperature-widget {
   display: grid;
   grid-template-columns: auto auto;
-  gap: 1.8rem;
+  gap: 1.65rem;
   align-items: center;
   justify-content: center;
   transform: translateX(1rem);
@@ -41,40 +41,106 @@
 .temperature-widget__left {
   display: grid;
   grid-template-columns: auto auto;
-  gap: 0.5rem;
-  align-items: center;
+  gap: 0.8rem;
+  align-items: end;
 }
 
-.temperature-widget__tube {
-  width: 2.2rem;
-  height: 12.8rem;
+.temperature-widget__thermometer {
+  width: 3.95rem;
+  height: 14.4rem;
+  position: relative;
+}
+
+.temperature-widget__stem {
+  width: 1.52rem;
+  height: 11.55rem;
+  margin: 0 auto;
   border-radius: 999px;
-  border: 1px solid rgba(tokens.$color-border, 0.8);
-  background: linear-gradient(180deg, rgba(#171a2a, 0.98), rgba(#101322, 0.92));
+  border: 1px solid rgba(tokens.$color-border, 0.7);
+  background: linear-gradient(180deg, rgba(#1a1d2d, 0.98), rgba(#111424, 0.95));
   position: relative;
   overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0.42rem;
+    left: 0.22rem;
+    width: 0.2rem;
+    height: calc(100% - 0.84rem);
+    border-radius: 999px;
+    background: rgba(#d9fef4, 0.26);
+    pointer-events: none;
+  }
 }
 
-.temperature-widget__fill {
+.temperature-widget__stem-fill {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 999px 999px 0 0;
-  background: linear-gradient(180deg, #bcffef 0%, tokens.$color-accent 100%);
-  box-shadow: 0 0 16px rgba(tokens.$color-accent, 0.34);
+  border-radius: 999px 999px 0.3rem 0.3rem;
+  background: linear-gradient(180deg, #cbfff3 0%, #9dfde7 34%, tokens.$color-accent 100%);
+  box-shadow: inset 0 -4px 10px rgba(8, 44, 41, 0.34), 0 0 18px rgba(tokens.$color-accent, 0.42);
   transition: height 0.8s ease;
 }
 
+.temperature-widget__bulb {
+  width: 3.45rem;
+  height: 3.45rem;
+  margin: -0.76rem auto 0;
+  border-radius: 50%;
+  border: 1px solid rgba(tokens.$color-border, 0.68);
+  background: radial-gradient(circle at 35% 30%, rgba(#2b3651, 0.95), rgba(#121625, 0.98));
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 0 2px rgba(#111425, 0.78), 0 0 20px rgba(tokens.$color-accent, 0.14);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -0.28rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1.02rem;
+    height: 0.32rem;
+    border-radius: 0.35rem;
+    background: linear-gradient(180deg, rgba(#b9fff0, 0.9), rgba(tokens.$color-accent, 0.7));
+    box-shadow: 0 0 9px rgba(tokens.$color-accent, 0.4);
+  }
+}
+
+.temperature-widget__bulb-core {
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #ddfff8 0%, #a7ffec 30%, tokens.$color-accent 72%);
+  box-shadow: inset 0 -5px 8px rgba(7, 45, 42, 0.3), 0 0 16px rgba(tokens.$color-accent, 0.54);
+}
+
 .temperature-widget__scale {
-  height: 12.8rem;
+  height: 13.2rem;
   display: grid;
   align-content: space-between;
 
   span {
     color: rgba(tokens.$color-text-muted, 0.9);
-    font-size: 0.67rem;
+    font-size: 0.68rem;
     font-weight: 700;
+    position: relative;
+    padding-left: 0.7rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0.56rem;
+      height: 1px;
+      background: rgba(tokens.$color-text-muted, 0.7);
+    }
   }
 }
 
