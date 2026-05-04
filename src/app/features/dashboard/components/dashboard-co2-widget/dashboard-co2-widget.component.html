@@ -5,33 +5,63 @@
   </header>
 
   <div class="widget-card__metrics">
-    <p class="widget-card__value">{{ co2Ppm | number: '1.0-0' }} <small>ppm</small></p>
+    <p class="widget-card__value">
+      {{ co2Ppm | number: '1.0-0' }}
+      <small>ppm</small>
+    </p>
+
     <p class="widget-card__trend">{{ trendLabel }}</p>
   </div>
 
-  <svg class="widget-card__chart" viewBox="0 0 320 170" aria-hidden="true">
+  <svg class="widget-card__chart" viewBox="0 0 520 240" aria-hidden="true">
     <defs>
       <linearGradient id="co2AreaGradient" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#9cf8e1" stop-opacity="0.55"></stop>
+        <stop offset="0%" stop-color="#9cf8e1" stop-opacity="0.62"></stop>
         <stop offset="100%" stop-color="#9cf8e1" stop-opacity="0"></stop>
       </linearGradient>
     </defs>
 
     <g class="widget-card__grid">
       <g *ngFor="let tick of yTicks">
-        <line x1="24" [attr.y1]="tick.y" x2="314" [attr.y2]="tick.y"></line>
-        <text *ngIf="tick.showLabel" x="4" [attr.y]="tick.y + 3">{{ tick.value }}</text>
+        <line
+          [attr.x1]="marginLeft"
+          [attr.y1]="tick.y"
+          [attr.x2]="chartWidth - marginRight"
+          [attr.y2]="tick.y"
+        ></line>
+
+        <text
+          [attr.x]="marginLeft - 10"
+          [attr.y]="tick.y + 4"
+        >
+          {{ tick.value }}
+        </text>
       </g>
     </g>
 
     <path class="widget-card__area" [attr.d]="areaPath"></path>
     <path class="widget-card__line" [attr.d]="linePath"></path>
 
-    <line class="widget-card__axis-line" x1="24" y1="8" x2="24" y2="146"></line>
-    <line class="widget-card__axis-line" x1="24" y1="146" x2="314" y2="146"></line>
+    <line
+      class="widget-card__axis-line"
+      [attr.x1]="marginLeft"
+      [attr.y1]="marginTop"
+      [attr.x2]="marginLeft"
+      [attr.y2]="marginTop + plotHeight"
+    ></line>
+
+    <line
+      class="widget-card__axis-line"
+      [attr.x1]="marginLeft"
+      [attr.y1]="marginTop + plotHeight"
+      [attr.x2]="marginLeft + plotWidth"
+      [attr.y2]="marginTop + plotHeight"
+    ></line>
 
     <g class="widget-card__x-axis">
-      <text *ngFor="let tick of xTicks" [attr.x]="tick.x" y="164">{{ tick.label }}</text>
+      <text *ngFor="let tick of xTicks" [attr.x]="tick.x" [attr.y]="chartHeight - 8">
+        {{ tick.label }}
+      </text>
     </g>
   </svg>
 </article>

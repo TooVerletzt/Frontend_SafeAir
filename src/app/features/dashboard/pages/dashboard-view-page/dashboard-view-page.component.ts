@@ -37,6 +37,9 @@ export class DashboardViewPageComponent {
   readonly viewModel$ = this.dashboardFacade.viewModel$;
   readonly environmentViewModel$ = this.environmentMockState.viewModel$;
 
+  selectedTelemetryDate = this.formatDateForInput(new Date());
+  selectedTelemetryTime = this.formatTimeForInput(new Date());
+
   constructor(
     private readonly dashboardFacade: DashboardFacade,
     private readonly environmentMockState: DashboardEnvironmentMockService,
@@ -53,5 +56,29 @@ export class DashboardViewPageComponent {
 
   selectRoom(roomId: string): void {
     this.environmentMockState.selectRoom(roomId);
+  }
+
+  onTelemetryDateTimeApplied(selection: { date: string; time: string }): void {
+    this.selectedTelemetryDate = selection.date;
+    this.selectedTelemetryTime = selection.time;
+
+    // Aquí después podrás conectar la lógica real para filtrar historial/telemetría.
+    console.log('Fecha/Hora seleccionada:', selection);
+  }
+
+  private formatDateForInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  private formatTimeForInput(date: Date): string {
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${hours}:${minutes}:${seconds}`;
   }
 }

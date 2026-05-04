@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { DecimalPipe, NgFor } from '@angular/common';
 
 interface ChartTick {
   readonly value: number;
   readonly y: number;
-  readonly showLabel: boolean;
 }
 
 interface ChartXTick {
@@ -15,7 +14,7 @@ interface ChartXTick {
 @Component({
   selector: 'sa-dashboard-co2-widget',
   standalone: true,
-  imports: [DecimalPipe, NgFor, NgIf],
+  imports: [DecimalPipe, NgFor],
   templateUrl: './dashboard-co2-widget.component.html',
   styleUrl: './dashboard-co2-widget.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,21 +23,23 @@ export class DashboardCo2WidgetComponent {
   @Input({ required: true }) co2Ppm = 500;
   @Input({ required: true }) history: readonly number[] = [];
 
-  readonly chartWidth = 320;
-  readonly chartHeight = 170;
-  private readonly minY = 0;
-  private readonly maxY = 1000;
-  private readonly marginTop = 8;
-  private readonly marginRight = 6;
-  private readonly marginBottom = 24;
-  private readonly marginLeft = 24;
+  readonly chartWidth = 520;
+  readonly chartHeight = 240;
+
+  readonly minY = 0;
+  readonly maxY = 2000;
+
+  readonly marginTop = 16;
+  readonly marginRight = 18;
+  readonly marginBottom = 34;
+  readonly marginLeft = 56;
 
   readonly yTicks: readonly ChartTick[] = Array.from({ length: 6 }, (_, index) => {
-    const value = index * 200;
+    const value = index * 400;
+
     return {
       value,
       y: this.toChartY(value),
-      showLabel: true,
     };
   });
 
@@ -50,15 +51,19 @@ export class DashboardCo2WidgetComponent {
   ];
 
   get linePath(): string {
-    return this.buildLinePath(this.history);
+    return this.buildLinePath(this.safeHistory);
   }
 
   get areaPath(): string {
-    if (this.history.length === 0) {
+    const history = this.safeHistory;
+
+    if (history.length === 0) {
       return '';
     }
 
-    return `${this.linePath} L ${this.marginLeft + this.plotWidth} ${this.marginTop + this.plotHeight} L ${this.marginLeft} ${this.marginTop + this.plotHeight} Z`;
+    const baseY = this.marginTop + this.plotHeight;
+
+    return `${this.linePath} L ${this.marginLeft + this.plotWidth} ${baseY} L ${this.marginLeft} ${baseY} Z`;
   }
 
   get trendLabel(): string {
@@ -67,6 +72,7 @@ export class DashboardCo2WidgetComponent {
     }
 
     const previous = this.history[this.history.length - 2];
+
     if (this.co2Ppm > previous + 25) {
       return 'Subiendo';
     }
@@ -78,6 +84,22 @@ export class DashboardCo2WidgetComponent {
     return 'Estable';
   }
 
+  get plotWidth(): number {
+    return this.chartWidth - this.marginLeft - this.marginRight;
+  }
+
+  get plotHeight(): number {
+    return this.chartHeight - this.marginTop - this.marginBottom;
+  }
+
+  private get safeHistory(): readonly number[] {
+    if (this.history.length > 0) {
+      return this.history;
+    }
+
+    return [this.co2Ppm];
+  }
+
   private buildLinePath(history: readonly number[]): string {
     if (history.length === 0) {
       return '';
@@ -87,22 +109,16 @@ export class DashboardCo2WidgetComponent {
       .map((value, index) => {
         const x = this.marginLeft + (index / Math.max(1, history.length - 1)) * this.plotWidth;
         const y = this.toChartY(value);
+
         return `${index === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`;
       })
       .join(' ');
   }
 
-  private get plotWidth(): number {
-    return this.chartWidth - this.marginLeft - this.marginRight;
-  }
-
-  private get plotHeight(): number {
-    return this.chartHeight - this.marginTop - this.marginBottom;
-  }
-
   private toChartY(value: number): number {
     const clamped = Math.max(this.minY, Math.min(this.maxY, value));
     const ratio = (clamped - this.minY) / (this.maxY - this.minY);
+
     return this.marginTop + this.plotHeight - ratio * this.plotHeight;
   }
 }

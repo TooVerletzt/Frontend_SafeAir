@@ -2,7 +2,13 @@
   <sa-dashboard-sidebar class="section-page__sidebar" [user]="vm.user" />
 
   <section class="section-page__main">
-    <sa-dashboard-topbar [locationLabel]="'Dashboard'" />
+    <sa-dashboard-topbar
+      [locationLabel]="'Dashboard'"
+      [showDateTimeFilter]="true"
+      [selectedDate]="selectedTelemetryDate"
+      [selectedTime]="selectedTelemetryTime"
+      (dateTimeApplied)="onTelemetryDateTimeApplied($event)"
+    />
 
     <section class="section-page__content" *ngIf="environmentViewModel$ | async as envVm">
       <header class="section-page__header">
@@ -26,11 +32,17 @@
         </div>
 
         <div class="dashboard-grid__item dashboard-grid__item--co2">
-          <sa-dashboard-co2-widget [co2Ppm]="state.co2Ppm" [history]="state.co2History" />
+          <sa-dashboard-co2-widget
+            [co2Ppm]="state.co2Ppm"
+            [history]="state.co2History"
+          />
         </div>
 
         <div class="dashboard-grid__item dashboard-grid__item--pm25">
-          <sa-dashboard-pm25-widget [pm25UgM3]="state.pm25UgM3" [history]="state.pm25History" />
+          <sa-dashboard-pm25-widget
+            [pm25UgM3]="state.pm25UgM3"
+            [history]="state.pm25History"
+          />
         </div>
       </section>
 
