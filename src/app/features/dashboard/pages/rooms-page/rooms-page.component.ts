@@ -1,4 +1,4 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -51,15 +51,16 @@ const requiredActuatorRangeValidator = (control: AbstractControl): ValidationErr
 @Component({
   selector: 'sa-rooms-page',
   standalone: true,
-  imports: [
-    AsyncPipe,
-    NgIf,
-    NgFor,
-    ReactiveFormsModule,
-    DashboardSidebarComponent,
-    DashboardTopbarComponent,
-    RoomActuatorCardComponent,
-  ],
+ imports: [
+  AsyncPipe,
+  DecimalPipe,
+  NgIf,
+  NgFor,
+  ReactiveFormsModule,
+  DashboardSidebarComponent,
+  DashboardTopbarComponent,
+  RoomActuatorCardComponent,
+],
   templateUrl: './rooms-page.component.html',
   styleUrl: './rooms-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -83,15 +84,15 @@ export class RoomsPageComponent {
     }),
     minisplitQty: new FormControl(1, {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(3)],
+      validators: [Validators.required, Validators.min(0), Validators.max(3)],
     }),
     purifierQty: new FormControl(1, {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(3)],
+      validators: [Validators.required, Validators.min(0), Validators.max(3)],
     }),
     extractorQty: new FormControl(1, {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(3)],
+      validators: [Validators.required, Validators.min(0), Validators.max(3)],
     }),
     minisplitSize: new FormControl<ActuatorSize>('small', {
       nonNullable: true,

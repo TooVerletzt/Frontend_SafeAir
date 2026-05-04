@@ -13,7 +13,7 @@ import { ActuatorSize } from '../../domain/models/actuator-size.model';
 export class RoomActuatorCardComponent {
   @Input() type: 'minisplit' | 'purifier' | 'extractor' = 'minisplit';
   @Input() title = 'MiniSplit';
-  @Input() subtitle = 'THERMAL REGULATION';
+  @Input() subtitle = 'Regulación térmica';
   @Input() iconSrc = 'assets/icons/actuador.png';
 
   @Input() quantity = 1;
@@ -28,6 +28,15 @@ export class RoomActuatorCardComponent {
 
   get isActive(): boolean {
     return this.quantity >= 1;
+  }
+
+  toggleSelected(): void {
+    if (this.isActive) {
+      this.quantityChange.emit(0);
+      return;
+    }
+
+    this.quantityChange.emit(1);
   }
 
   setQuantity(value: number): void {

@@ -25,7 +25,7 @@ export class DashboardSidebarComponent {
     { label: 'Inicio', iconSrc: 'assets/icons/cuadros.png', to: '/dashboard' },
     { label: 'Dashboard', iconSrc: 'assets/icons/area.png', to: '/dashboard-view' },
     { label: 'Cuartos', iconSrc: 'assets/icons/cuarto.png', to: '/rooms' },
-    { label: 'Actuadores', iconSrc: 'assets/icons/actuador.png', to: '/actuators' },
+
     { label: 'Configuración', iconSrc: 'assets/icons/escudo.png', to: '/settings' },
   ];
 
@@ -44,10 +44,6 @@ export class DashboardSidebarComponent {
 
     if (item.label === 'Cuartos') {
       return currentPath === '/rooms' || currentPath.startsWith('/rooms/');
-    }
-
-    if (item.label === 'Actuadores') {
-      return currentPath === '/actuators' || currentPath.startsWith('/actuators/');
     }
 
     if (item.label === 'Configuración') {
