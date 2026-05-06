@@ -108,14 +108,26 @@
 }
 
 .humidity-widget__range {
-  width: 100%;
-  margin-top: 0.35rem;
+  /* =========================
+     CONTROLES POSICIÓN 0% / 100%
+     ========================= */
+  --range-width: 25rem;       /* ancho igual/aproximado a la media lsuna */
+  --range-shift-x: 12px;       /* derecha + / izquierda - */
+  --range-shift-y: -5.8rem;   /* abajo + / arriba - */
+
+  width: var(--range-width);
+  margin: 0 auto;
+  transform: translate(
+    var(--range-shift-x),
+    var(--range-shift-y)
+  );
+
   display: flex;
   justify-content: space-between;
 
   span {
-    color: rgba(tokens.$color-text-muted, 0.82);
-    font-size: 0.68rem;
+    color: #9cf8e1;
+    font-size: 1.68rem;
     font-weight: 700;
   }
 }

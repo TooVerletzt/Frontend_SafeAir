@@ -785,3 +785,39 @@
   left: 0;
   z-index: 9999; /* IMPORTANTE */
 }
+.dashboard-topbar__search-wrapper {
+  position: relative;
+}
+
+.dashboard-topbar__search-icon {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  img {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.85;
+  }
+}
+
+.dashboard-topbar__search-message {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(#ff8ea0, 0.35);
+  background: rgba(#251827, 0.96);
+  color: #ffd3da;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);
+  z-index: 999;
+}

@@ -266,11 +266,32 @@
       </div>
     </div>
 
-    <div class="dashboard-topbar__search">
-      <img src="assets/icons/lupa.png" alt="Buscar" />
-      <input type="text" placeholder="Quick search..." />
-    </div>
+    <div class="dashboard-topbar__search-wrapper">
+  <div class="dashboard-topbar__search">
+    <button
+      class="dashboard-topbar__search-icon"
+      type="button"
+      aria-label="Buscar cuarto"
+      (click)="searchRoom(searchInput.value)"
+    >
+      <img src="assets/icons/lupa.png" alt="" aria-hidden="true" />
+    </button>
 
+    <input
+      #searchInput
+      type="text"
+      placeholder="Búsqueda rápida..."
+      autocomplete="off"
+      (input)="onSearchInput(searchInput.value)"
+      (keydown.enter)="searchRoom(searchInput.value)"
+    />
+  </div>
+
+  <p class="dashboard-topbar__search-message" *ngIf="searchMessage">
+    {{ searchMessage }}
+  </p>
+</div>
+    <!--
     <button class="dashboard-topbar__icon-btn" type="button" aria-label="Notificaciones">
       <img src="assets/icons/campana.png" alt="Notificaciones" />
     </button>
@@ -278,5 +299,7 @@
     <button class="dashboard-topbar__icon-btn" type="button" aria-label="Perfil">
       <img src="assets/icons/user.png" alt="Perfil" />
     </button>
+  -->
+
   </div>
 </header>

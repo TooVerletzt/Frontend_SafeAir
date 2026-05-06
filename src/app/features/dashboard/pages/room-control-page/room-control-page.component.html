@@ -129,10 +129,15 @@
           </button>
         </div>
 
-        <p class="actuator-unit__description">
-          Estado del sistema:
-          <strong>{{ isUnitOn(unit) ? 'Activo' : 'Apagado' }}</strong>
-        </p>
+       <p class="actuator-unit__description">
+  Estado del sistema:
+  <strong
+    [class.is-active]="isUnitOn(unit)"
+    [class.is-off]="!isUnitOn(unit)"
+  >
+    {{ isUnitOn(unit) ? 'Activo' : 'Apagado' }}
+  </strong>
+</p>
       </div>
 
       <div

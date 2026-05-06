@@ -383,16 +383,23 @@
     gap: 12px;
   }
 
-  &__description {
-    color: #9fa7d0;
-    font-size: var(--unit-description-size);
-    font-weight: 700;
+ &__description {
+  color: #9fa7d0;
+  font-size: var(--unit-description-size);
+  font-weight: 700;
 
-    strong {
-      color: #1ff7d1;
-      font-weight: 900;
-    }
+  strong {
+    font-weight: 900;
   }
+
+  strong.is-active {
+    color: #1ff7d1;
+  }
+
+  strong.is-off {
+    color: #ff5f6d;
+  }
+}
 
   &--placeholder {
     min-height: var(--simple-unit-height);

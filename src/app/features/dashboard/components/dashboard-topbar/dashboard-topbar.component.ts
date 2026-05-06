@@ -9,6 +9,11 @@ import {
   Output,
   inject,
 } from '@angular/core';
+import { Router } from '@angular/router';
+import { take } from 'rxjs';
+
+import { DashboardFacade } from '@features/dashboard/application/facades/dashboard.facade';
+import { DashboardRoom } from '@features/dashboard/domain/models/dashboard-room.model';
 
 type PickerMode = 'calendar' | 'year' | 'hour' | 'minute';
 
@@ -34,6 +39,10 @@ interface ClockMark {
 })
 export class DashboardTopbarComponent {
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly router = inject(Router);
+  private readonly dashboardFacade = inject(DashboardFacade);
+
+  searchMessage = '';
 
   @Input() locationLabel = 'Dashboard';
   @Input() selectedDate = '';
@@ -307,6 +316,132 @@ export class DashboardTopbarComponent {
     return mark.value;
   }
 
+
+  onSearchInput(value: string): void {
+  if (value.trim().length > 0) {
+    this.searchMessage = '';
+  }
+}
+
+searchRoom(rawQuery: string): void {
+  const query = rawQuery.trim();
+
+  if (!query) {
+    this.searchMessage = 'Escribe el nombre de un cuarto para buscar.';
+    return;
+  }
+
+  this.dashboardFacade.viewModel$
+    .pipe(take(1))
+    .subscribe((vm) => {
+      const match = this.findBestRoomMatch(query, vm.rooms);
+
+      if (!match) {
+        this.searchMessage = `No se encontraron resultados para "${query}".`;
+        return;
+      }
+
+      this.searchMessage = '';
+      this.router.navigate(['/rooms', match.id, 'control']);
+    });
+}
+
+private findBestRoomMatch(query: string, rooms: readonly DashboardRoom[]): DashboardRoom | null {
+  const normalizedQuery = this.normalizeSearchText(query);
+
+  if (!normalizedQuery) {
+    return null;
+  }
+
+  const scoredRooms = rooms
+    .map((room) => {
+      const roomName = this.normalizeSearchText(room.name);
+      const designation = this.normalizeSearchText(room.designation);
+      const searchableName = `${roomName} ${designation}`.trim();
+
+      return {
+        room,
+        score: this.getSearchScore(normalizedQuery, searchableName),
+      };
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  return scoredRooms[0]?.room ?? null;
+}
+
+private getSearchScore(query: string, target: string): number {
+  if (!query || !target) {
+    return 0;
+  }
+
+  if (target === query) {
+    return 100;
+  }
+
+  if (target.startsWith(query)) {
+    return 90;
+  }
+
+  if (target.includes(query)) {
+    return 80;
+  }
+
+  const words = target.split(/\s+/);
+
+  if (words.some((word) => word.startsWith(query))) {
+    return 75;
+  }
+
+  const bestDistance = Math.min(
+    ...words.map((word) => this.getLevenshteinDistance(query, word)),
+  );
+
+  const maxLength = Math.max(query.length, Math.max(...words.map((word) => word.length)));
+  const similarity = 1 - bestDistance / Math.max(1, maxLength);
+
+  if (similarity >= 0.58) {
+    return Math.round(similarity * 70);
+  }
+
+  return 0;
+}
+
+private normalizeSearchText(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+private getLevenshteinDistance(source: string, target: string): number {
+  const rows = source.length + 1;
+  const columns = target.length + 1;
+  const matrix: number[][] = Array.from({ length: rows }, () => Array(columns).fill(0));
+
+  for (let row = 0; row < rows; row += 1) {
+    matrix[row][0] = row;
+  }
+
+  for (let column = 0; column < columns; column += 1) {
+    matrix[0][column] = column;
+  }
+
+  for (let row = 1; row < rows; row += 1) {
+    for (let column = 1; column < columns; column += 1) {
+      const cost = source[row - 1] === target[column - 1] ? 0 : 1;
+
+      matrix[row][column] = Math.min(
+        matrix[row - 1][column] + 1,
+        matrix[row][column - 1] + 1,
+        matrix[row - 1][column - 1] + cost,
+      );
+    }
+  }
+
+  return matrix[source.length][target.length];
+}
   @HostListener('document:pointermove', ['$event'])
   handleDocumentPointerMove(event: PointerEvent): void {
     if (!this.isClockDragging) {
@@ -477,3 +612,4 @@ export class DashboardTopbarComponent {
     return String(value).padStart(2, '0');
   }
 }
+
