@@ -38,7 +38,7 @@
   h3 {
     margin: 0;
     color: tokens.$color-text-primary;
-    font-size: 1.02rem;
+    font-size: 1.28rem;
   }
 }
 
@@ -51,7 +51,7 @@
   padding: 0 0.5rem;
   display: inline-flex;
   align-items: center;
-  font-size: 0.68rem;
+  font-size: 0.98rem;
   font-weight: 700;
 }
 
@@ -64,11 +64,11 @@
 .widget-card__value {
   margin: 0;
   color: #f9fcff;
-  font-size: 2.1rem;
+  font-size: 2.0rem;
   font-weight: 800;
 
   small {
-    font-size: 0.95rem;
+    font-size: 1.2rem;
     color: tokens.$color-text-muted;
     font-weight: 700;
   }
@@ -76,8 +76,17 @@
 
 .widget-card__trend {
   margin: 0;
-  color: tokens.$color-text-muted;
-  font-size: 0.8rem;
+  color: tokens.$color-text-secondary;
+  font-size: 1.05rem;
+  width: fit-content;
+  min-height: 1.55rem;
+  border-radius: 99rem;
+  border: 1px solid rgba(tokens.$color-border, 0.8);
+  background: rgba(#141726, 0.75);
+  padding: 0 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
 }
 
 .widget-card__chart {

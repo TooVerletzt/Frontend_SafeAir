@@ -38,14 +38,15 @@
   h3 {
     margin: 0;
     color: tokens.$color-text-primary;
-    font-size: 1.02rem;
+    font-size: 1.28rem;
   }
 }
 
 .widget-card__unit {
   color: tokens.$color-accent;
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 1.46rem;
+  line-height: 1;
 }
 
 .widget-card__metrics {
@@ -61,7 +62,7 @@
   font-weight: 800;
 
   small {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     color: tokens.$color-text-muted;
     font-weight: 700;
   }
@@ -70,7 +71,7 @@
 .widget-card__trend {
   margin: 0;
   color: tokens.$color-text-secondary;
-  font-size: 0.8rem;
+  font-size: 1.05rem;
   width: fit-content;
   min-height: 1.55rem;
   border-radius: 99rem;

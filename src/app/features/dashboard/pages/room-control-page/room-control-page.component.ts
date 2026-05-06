@@ -210,54 +210,73 @@ export class RoomControlPageComponent implements OnInit {
     }
   }
 
-  isUnitOn(index: number): boolean {
-    if (!this.selectedActuatorKey) return false;
-    return this.getUnitState(this.selectedActuatorKey, index).on;
+  get simpleUnitPlaceholders(): number[] {
+  const missingSlots = Math.max(0, 3 - this.selectedUnits.length);
+  return Array.from({ length: missingSlots }, (_, index) => index + 1);
+}
+
+isUnitOn(index: number): boolean {
+  if (!this.selectedActuatorKey) return false;
+  return this.getUnitState(this.selectedActuatorKey, index).on;
+}
+
+toggleUnit(index: number): void {
+  if (!this.selectedActuatorKey) return;
+
+  const key = this.buildUnitKey(this.selectedActuatorKey, index);
+  const current = this.unitStates[key] ?? { on: false, value: 24 };
+
+  this.unitStates[key] = {
+    ...current,
+    on: !current.on,
+  };
+}
+
+getUnitValue(index: number): number {
+  if (!this.selectedActuatorKey) return 24;
+  return this.getUnitState(this.selectedActuatorKey, index).value;
+}
+
+setUnitValue(index: number, event: Event): void {
+  if (!this.selectedActuatorKey) return;
+
+  const target = event.target as HTMLInputElement;
+  const key = this.buildUnitKey(this.selectedActuatorKey, index);
+  const current = this.unitStates[key] ?? { on: false, value: 24 };
+
+  this.unitStates[key] = {
+    ...current,
+    value: Number(target.value),
+  };
+}
+
+areAllSelectedUnitsOn(): boolean {
+  if (!this.selectedActuatorKey || this.selectedUnits.length === 0) {
+    return false;
   }
 
-  toggleUnit(index: number): void {
-    if (!this.selectedActuatorKey) return;
+  return this.selectedUnits.every((unit) => this.isUnitOn(unit));
+}
 
-    const key = this.buildUnitKey(this.selectedActuatorKey, index);
-    const current = this.unitStates[key] ?? { on: true, value: 24 };
+toggleAllSelected(): void {
+  if (!this.selectedActuatorKey) return;
+
+  const shouldTurnOff = this.areAllSelectedUnitsOn();
+
+  for (const unit of this.selectedUnits) {
+    const key = this.buildUnitKey(this.selectedActuatorKey, unit);
+    const current = this.unitStates[key] ?? { on: false, value: 24 };
 
     this.unitStates[key] = {
       ...current,
-      on: !current.on,
+      on: !shouldTurnOff,
     };
   }
+}
 
-  getUnitValue(index: number): number {
-    if (!this.selectedActuatorKey) return 24;
-    return this.getUnitState(this.selectedActuatorKey, index).value;
-  }
-
-  setUnitValue(index: number, event: Event): void {
-    if (!this.selectedActuatorKey) return;
-
-    const target = event.target as HTMLInputElement;
-    const key = this.buildUnitKey(this.selectedActuatorKey, index);
-    const current = this.unitStates[key] ?? { on: true, value: 24 };
-
-    this.unitStates[key] = {
-      ...current,
-      value: Number(target.value),
-    };
-  }
-
-  activateAllSelected(): void {
-    if (!this.selectedActuatorKey) return;
-
-    for (const unit of this.selectedUnits) {
-      const key = this.buildUnitKey(this.selectedActuatorKey, unit);
-      const current = this.unitStates[key] ?? { on: true, value: 24 };
-
-      this.unitStates[key] = {
-        ...current,
-        on: true,
-      };
-    }
-  }
+activateAllSelected(): void {
+  this.toggleAllSelected();
+}
 
   private ensureSelectedActuator(): void {
     const selectedStillExists = this.availableActuators.some(
@@ -282,7 +301,7 @@ export class RoomControlPageComponent implements OnInit {
 
         if (!this.unitStates[stateKey]) {
           this.unitStates[stateKey] = {
-            on: true,
+            on: false,
             value: 24,
           };
         }
@@ -292,7 +311,7 @@ export class RoomControlPageComponent implements OnInit {
 
   private getUnitState(type: ActuatorKey, index: number): UnitControlState {
     const key = this.buildUnitKey(type, index);
-    return this.unitStates[key] ?? { on: true, value: 24 };
+    return this.unitStates[key] ?? { on: false, value: 24 };
   }
 
   private buildUnitKey(type: ActuatorKey, index: number): string {

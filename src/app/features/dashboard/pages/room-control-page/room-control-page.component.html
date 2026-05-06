@@ -48,6 +48,7 @@
                 <img
                   [src]="getBadgeIcon(actuator)"
                   [alt]="actuator.label" />
+
                 <span class="room-visual-actuator__badge">
                   {{ actuator.quantity }}
                 </span>
@@ -59,74 +60,96 @@
         <aside class="room-control-right">
           <h2 class="right-title">Control de Actuadores</h2>
 
-          <div class="actuator-panel" *ngIf="selectedActuator; else emptyPanel">
-            <div class="actuator-panel__header">
-              <img
-                class="actuator-panel__header-icon"
-                [src]="getPanelIcon()"
-                [alt]="getPanelTitle()" />
-              <h3>{{ getPanelTitle() }}</h3>
-            </div>
+          <div
+  class="actuator-panel"
+  [class.actuator-panel--simple]="selectedActuatorKey !== 'minisplit'"
+  *ngIf="selectedActuator; else emptyPanel"
+>
+  <div class="actuator-panel__header">
+    <img
+      class="actuator-panel__header-icon"
+      [src]="getPanelIcon()"
+      [alt]="getPanelTitle()" />
 
-            <ng-container *ngIf="selectedActuatorKey === 'minisplit'; else simpleActuators">
-              <div class="actuator-unit" *ngFor="let unit of selectedUnits">
-                <div class="actuator-unit__top">
-                  <div>
-                    <h4>{{ unitTitle(unit) }}</h4>
-                    <p>{{ sizeLabel(getActuatorSize('minisplit')) }}</p>
-                  </div>
+    <h3>{{ getPanelTitle() }}</h3>
+  </div>
 
-                  <button
-                    type="button"
-                    class="power-toggle"
-                    [class.is-on]="isUnitOn(unit)"
-                    (click)="toggleUnit(unit)">
-                    <span>{{ isUnitOn(unit) ? 'ON' : 'OFF' }}</span>
-                    <span class="power-toggle__dot"></span>
-                  </button>
-                </div>
-
-                <div class="actuator-slider">
-                  <input
-                    type="range"
-                    min="19"
-                    max="30"
-                    [value]="getUnitValue(unit)"
-                    (input)="setUnitValue(unit, $event)" />
-
-                  <div class="actuator-slider__labels">
-                    <span>19°C</span>
-                    <span>30°C</span>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-
-            <ng-template #simpleActuators>
-              <div class="actuator-unit actuator-unit--simple" *ngFor="let unit of selectedUnits">
-                <div>
-                  <h4>{{ unitTitle(unit) }}</h4>
-                  <p>{{ sizeLabel(getActuatorSize(selectedActuatorKey!)) }}</p>
-                </div>
-
-                <button
-                  type="button"
-                  class="power-toggle"
-                  [class.is-on]="isUnitOn(unit)"
-                  (click)="toggleUnit(unit)">
-                  <span>{{ isUnitOn(unit) ? 'ON' : 'OFF' }}</span>
-                  <span class="power-toggle__dot"></span>
-                </button>
-              </div>
-            </ng-template>
-
-            <button
-              type="button"
-              class="activate-all-button"
-              (click)="activateAllSelected()">
-              ACTIVAR TODOS
-            </button>
+  <ng-container *ngIf="selectedActuatorKey === 'minisplit'; else simpleActuators">
+    <div class="actuator-panel__units">
+      <div class="actuator-unit" *ngFor="let unit of selectedUnits">
+        <div class="actuator-unit__top">
+          <div>
+            <h4>{{ unitTitle(unit) }}</h4>
+            <p>{{ sizeLabel(getActuatorSize('minisplit')) }}</p>
           </div>
+
+          <button
+            type="button"
+            class="power-toggle"
+            [class.is-on]="isUnitOn(unit)"
+            (click)="toggleUnit(unit)">
+            <span>{{ isUnitOn(unit) ? 'ON' : 'OFF' }}</span>
+            <span class="power-toggle__dot"></span>
+          </button>
+        </div>
+
+        <div class="actuator-slider">
+          <input
+            type="range"
+            min="19"
+            max="30"
+            [value]="getUnitValue(unit)"
+            (input)="setUnitValue(unit, $event)" />
+
+          <div class="actuator-slider__labels">
+            <span>19°C</span>
+            <span>30°C</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #simpleActuators>
+    <div class="actuator-panel__units actuator-panel__units--simple">
+      <div class="actuator-unit actuator-unit--simple" *ngFor="let unit of selectedUnits">
+        <div class="actuator-unit__simple-main">
+          <div>
+            <h4>{{ unitTitle(unit) }}</h4>
+            <p>{{ sizeLabel(getActuatorSize(selectedActuatorKey!)) }}</p>
+          </div>
+
+          <button
+            type="button"
+            class="power-toggle"
+            [class.is-on]="isUnitOn(unit)"
+            (click)="toggleUnit(unit)">
+            <span>{{ isUnitOn(unit) ? 'ON' : 'OFF' }}</span>
+            <span class="power-toggle__dot"></span>
+          </button>
+        </div>
+
+        <p class="actuator-unit__description">
+          Estado del sistema:
+          <strong>{{ isUnitOn(unit) ? 'Activo' : 'Apagado' }}</strong>
+        </p>
+      </div>
+
+      <div
+        class="actuator-unit actuator-unit--placeholder"
+        *ngFor="let placeholder of simpleUnitPlaceholders">
+      </div>
+    </div>
+  </ng-template>
+
+  <button
+    type="button"
+    class="activate-all-button"
+    [class.activate-all-button--off]="areAllSelectedUnitsOn()"
+    (click)="toggleAllSelected()">
+    {{ areAllSelectedUnitsOn() ? 'DESACTIVAR TODOS' : 'ACTIVAR TODOS' }}
+  </button>
+</div>
 
           <ng-template #emptyPanel>
             <div class="actuator-panel actuator-panel--empty">

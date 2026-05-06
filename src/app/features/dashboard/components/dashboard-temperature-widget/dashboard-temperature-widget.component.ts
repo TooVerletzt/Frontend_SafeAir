@@ -16,7 +16,11 @@ export class DashboardTemperatureWidgetComponent {
   readonly maxTemperatureC = 32;
 
   get fillHeightPct(): number {
-    const normalized = ((this.temperatureC - this.minTemperatureC) / (this.maxTemperatureC - this.minTemperatureC)) * 100;
+    const normalized =
+      ((this.temperatureC - this.minTemperatureC) /
+        (this.maxTemperatureC - this.minTemperatureC)) *
+      100;
+
     return Math.max(0, Math.min(100, normalized));
   }
 

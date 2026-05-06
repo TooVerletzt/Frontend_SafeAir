@@ -20,12 +20,15 @@
   h3 {
     margin: 0;
     color: tokens.$color-text-primary;
-    font-size: 1.02rem;
+    font-size: 1.28rem; // más grande
+    font-weight: 700;
   }
 
   span {
     color: tokens.$color-accent;
     font-weight: 700;
+    font-size: 1.46rem; // más grande el °C
+    line-height: 1;
   }
 }
 
@@ -42,7 +45,7 @@
   display: grid;
   grid-template-columns: auto auto;
   gap: 0.8rem;
-  align-items: end;
+  align-items: start;
 }
 
 .temperature-widget__thermometer {
@@ -120,13 +123,13 @@
 }
 
 .temperature-widget__scale {
-  height: 13.2rem;
+  height: 11.55rem;
   display: grid;
   align-content: space-between;
 
   span {
     color: rgba(tokens.$color-text-muted, 0.9);
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     font-weight: 700;
     position: relative;
     padding-left: 0.7rem;
@@ -146,7 +149,7 @@
 
 .temperature-widget__meta {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.75rem; // más separación entre valor, label y confort
   align-content: center;
   justify-items: center;
   text-align: center;
@@ -155,7 +158,7 @@
 .temperature-widget__value {
   margin: 0;
   color: #f8fbff;
-  font-size: 2.25rem;
+  font-size: 2.5rem; // más grande el 23.4°C
   font-weight: 800;
   line-height: 1;
 }
@@ -163,20 +166,20 @@
 .temperature-widget__label {
   margin: 0;
   color: rgba(tokens.$color-text-muted, 0.9);
-  font-size: 0.78rem;
+  font-size: 0.96rem; // más grande "Promedio instantáneo"
 }
 
 .temperature-widget__state {
   margin: 0;
   width: fit-content;
-  min-height: 1.65rem;
+  min-height: 2rem; // más alto
   border-radius: 999px;
   border: 1px solid rgba(tokens.$color-accent, 0.45);
   background: rgba(tokens.$color-accent, 0.13);
   color: #defff4;
-  padding: 0 0.6rem;
+  padding: 0 0.9rem; // más ancho
   display: inline-flex;
   align-items: center;
-  font-size: 0.78rem;
+  font-size: 0.92rem; // más grande "Confort"
   font-weight: 700;
 }
