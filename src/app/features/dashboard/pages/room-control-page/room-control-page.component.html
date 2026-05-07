@@ -6,8 +6,10 @@
 
   <div class="room-control-main">
     <sa-dashboard-topbar
-      [locationLabel]="locationLabel">
-    </sa-dashboard-topbar>
+  [locationLabel]="locationLabel"
+  [breadcrumbRoot]="'Cuartos'"
+  [breadcrumbCurrent]="room?.name || 'Control de habitación'">
+</sa-dashboard-topbar>
 
     <section class="room-control-content">
       <div class="room-control-grid">
@@ -93,19 +95,28 @@
           </button>
         </div>
 
-        <div class="actuator-slider">
-          <input
-            type="range"
-            min="19"
-            max="30"
-            [value]="getUnitValue(unit)"
-            (input)="setUnitValue(unit, $event)" />
+       <div class="actuator-slider">
+  <div class="actuator-slider__control">
+    <input
+      type="range"
+      min="19"
+      max="30"
+      [value]="getUnitValue(unit)"
+      (input)="setUnitValue(unit, $event)" />
 
-          <div class="actuator-slider__labels">
-            <span>19°C</span>
-            <span>30°C</span>
-          </div>
-        </div>
+    <span
+      class="actuator-slider__temperature-indicator"
+      [style.left.%]="getTemperaturePercent(getUnitValue(unit), 19, 30)"
+    >
+      {{ getUnitValue(unit) }}°C
+    </span>
+  </div>
+
+  <div class="actuator-slider__labels">
+    <span>19°C</span>
+    <span>30°C</span>
+  </div>
+</div>
       </div>
     </div>
   </ng-container>

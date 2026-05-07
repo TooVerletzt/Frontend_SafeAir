@@ -19,7 +19,7 @@
 
   <sa-form-input
     id="register-email"
-    label="CORREO ELECTR&Oacute;NICO"
+    label="CORREO ELECTRÓNICO"
     type="email"
     autocomplete="email"
     placeholder="nombre@empresa.com"
@@ -28,25 +28,87 @@
     [error]="getEmailError()"
   />
 
-  <sa-password-input
-    id="register-password"
-    label="CONTRASE&Ntilde;A"
-    placeholder="********"
-    leftIconSrc="assets/icons/candado.png"
-    eyeIconSrc="assets/icons/ojo.png"
-    [control]="passwordControl"
-    [error]="getPasswordError()"
-  />
+  <label class="register-password">
+    <span class="register-password__label">CONTRASEÑA</span>
 
-  <sa-password-input
-    id="register-confirm-password"
-    label="CONFIRMAR CONTRASE&Ntilde;A"
-    placeholder="********"
-    leftIconSrc="assets/icons/escudo.png"
-    eyeIconSrc="assets/icons/ojo.png"
-    [control]="confirmPasswordControl"
-    [error]="getConfirmPasswordError()"
-  />
+    <div
+      class="register-password__field"
+      [class.has-error]="getPasswordError()"
+    >
+      <img
+        class="register-password__left-icon"
+        src="assets/icons/candado.png"
+        alt=""
+        aria-hidden="true"
+      />
+
+      <input
+        id="register-password"
+        [type]="showPassword ? 'text' : 'password'"
+        autocomplete="new-password"
+        placeholder="********"
+        [formControl]="passwordControl"
+      />
+
+      <button
+        class="register-password__toggle"
+        type="button"
+        [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        (click)="togglePasswordVisibility()"
+      >
+        <img
+          [src]="showPassword ? 'assets/icons/ojocerrado.png' : 'assets/icons/ojo.png'"
+          alt=""
+          aria-hidden="true"
+        />
+      </button>
+    </div>
+
+    <span class="register-password__error" *ngIf="getPasswordError()">
+      {{ getPasswordError() }}
+    </span>
+  </label>
+
+  <label class="register-password">
+    <span class="register-password__label">CONFIRMAR CONTRASEÑA</span>
+
+    <div
+      class="register-password__field"
+      [class.has-error]="getConfirmPasswordError()"
+    >
+      <img
+        class="register-password__left-icon"
+        src="assets/icons/escudo.png"
+        alt=""
+        aria-hidden="true"
+      />
+
+      <input
+        id="register-confirm-password"
+        [type]="showConfirmPassword ? 'text' : 'password'"
+        autocomplete="new-password"
+        placeholder="********"
+        [formControl]="confirmPasswordControl"
+      />
+
+      <button
+        class="register-password__toggle"
+        type="button"
+        [attr.aria-label]="showConfirmPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        (click)="toggleConfirmPasswordVisibility()"
+      >
+        <img
+          [src]="showConfirmPassword ? 'assets/icons/ojocerrado.png' : 'assets/icons/ojo.png'"
+          alt=""
+          aria-hidden="true"
+        />
+      </button>
+    </div>
+
+    <span class="register-password__error" *ngIf="getConfirmPasswordError()">
+      {{ getConfirmPasswordError() }}
+    </span>
+  </label>
 
   <p *ngIf="formError" class="register-form__error" role="alert">{{ formError }}</p>
 
@@ -59,7 +121,7 @@
   />
 
   <p class="register-form__login-hint">
-    &iquest;Ya tienes cuenta?
-    <sa-auth-link to="/auth/login" label="Iniciar sesi&oacute;n" />
+    ¿Ya tienes cuenta?
+    <sa-auth-link to="/auth/login" label="Iniciar sesión" />
   </p>
 </form>

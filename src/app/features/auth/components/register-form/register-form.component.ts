@@ -6,7 +6,6 @@ import { RegisterDraft } from '@features/auth/domain/models/register-draft.model
 import { AuthLinkComponent } from '@shared/ui/form-button/auth-link.component';
 import { PrimaryButtonComponent } from '@shared/ui/form-button/primary-button.component';
 import { FormInputComponent } from '@shared/ui/form-input/form-input.component';
-import { PasswordInputComponent } from '@shared/ui/form-input/password-input.component';
 import { focusFirstInvalidControl } from '@shared/utils/a11y-focus.utils';
 import { emailLikeValidator, minTrimmedLengthValidator } from '@shared/validators/auth-form.validators';
 
@@ -22,9 +21,11 @@ const passwordMatchValidator = (control: AbstractControl): Record<string, true> 
   const group = control as FormGroup<RegisterFormShape>;
   const password = group.controls.password.value;
   const confirm = group.controls.confirmPassword.value;
+
   if (!password || !confirm) {
     return null;
   }
+
   return password === confirm ? null : { passwordMismatch: true };
 };
 
@@ -35,7 +36,6 @@ const passwordMatchValidator = (control: AbstractControl): Record<string, true> 
     NgIf,
     ReactiveFormsModule,
     FormInputComponent,
-    PasswordInputComponent,
     PrimaryButtonComponent,
     AuthLinkComponent,
   ],
@@ -50,10 +50,19 @@ export class RegisterFormComponent {
 
   @Output() submitRegister = new EventEmitter<RegisterDraft>();
 
+  showPassword = false;
+  showConfirmPassword = false;
+
   readonly form = new FormGroup<RegisterFormShape>(
     {
-      fullName: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-      lastName: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+      fullName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      lastName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
       email: new FormControl('', {
         nonNullable: true,
         validators: [Validators.required, emailLikeValidator()],
@@ -90,6 +99,14 @@ export class RegisterFormComponent {
     return this.form.controls.confirmPassword;
   }
 
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
   onSubmit(): void {
     if (this.form.invalid || this.loading) {
       this.form.markAllAsTouched();
@@ -118,12 +135,15 @@ export class RegisterFormComponent {
     if (!this.emailControl.touched && !this.emailControl.dirty) {
       return undefined;
     }
+
     if (this.emailControl.hasError('required')) {
       return 'Ingresa tu correo electronico.';
     }
+
     if (this.emailControl.hasError('emailLike')) {
       return 'El correo electronico no es valido.';
     }
+
     return undefined;
   }
 
@@ -131,28 +151,35 @@ export class RegisterFormComponent {
     if (!this.passwordControl.touched && !this.passwordControl.dirty) {
       return undefined;
     }
+
     if (this.passwordControl.hasError('required')) {
       return 'Ingresa una contrasena.';
     }
+
     if (this.passwordControl.hasError('minTrimmedLength')) {
       return 'La contrasena debe tener al menos 8 caracteres.';
     }
+
     return undefined;
   }
 
   getConfirmPasswordError(): string | undefined {
     if (
-      (!this.confirmPasswordControl.touched && !this.confirmPasswordControl.dirty) &&
+      !this.confirmPasswordControl.touched &&
+      !this.confirmPasswordControl.dirty &&
       !this.form.hasError('passwordMismatch')
     ) {
       return undefined;
     }
+
     if (this.confirmPasswordControl.hasError('required')) {
       return 'Confirma tu contrasena.';
     }
+
     if (this.form.hasError('passwordMismatch')) {
       return 'Las contrasenas no coinciden.';
     }
+
     return undefined;
   }
 
@@ -160,6 +187,7 @@ export class RegisterFormComponent {
     if (!control.touched && !control.dirty) {
       return undefined;
     }
+
     return control.hasError('required') ? message : undefined;
   }
 }

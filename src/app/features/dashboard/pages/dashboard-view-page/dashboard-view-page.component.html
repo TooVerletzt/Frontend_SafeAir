@@ -3,12 +3,14 @@
 
   <section class="section-page__main">
     <sa-dashboard-topbar
-      [locationLabel]="'Dashboard'"
-      [showDateTimeFilter]="true"
-      [selectedDate]="selectedTelemetryDate"
-      [selectedTime]="selectedTelemetryTime"
-      (dateTimeApplied)="onTelemetryDateTimeApplied($event)"
-    />
+  [locationLabel]="'Dashboard'"
+  [breadcrumbRoot]="'Dashboard'"
+  [breadcrumbCurrent]="'Monitoreo ambiental'"
+  [showDateTimeFilter]="true"
+  [selectedDate]="selectedTelemetryDate"
+  [selectedTime]="selectedTelemetryTime"
+  (dateTimeApplied)="onTelemetryDateTimeApplied($event)"
+/>
 
     <section class="section-page__content" *ngIf="environmentViewModel$ | async as envVm">
       <header class="section-page__header">

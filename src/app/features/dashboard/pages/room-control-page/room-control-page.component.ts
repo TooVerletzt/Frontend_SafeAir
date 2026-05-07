@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   OnInit,
@@ -11,6 +12,8 @@ import { combineLatest } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { DashboardFacade } from '@features/dashboard/application/facades/dashboard.facade';
+import { DashboardEnvironmentMockService } from '@features/dashboard/application/services/dashboard-environment-mock.service';
+import { DashboardEnvironmentState } from '@features/dashboard/domain/models/dashboard-environment-state.model';
 import { DashboardRoom } from '@features/dashboard/domain/models/dashboard-room.model';
 import { DashboardUser } from '@features/dashboard/domain/models/dashboard-user.model';
 import { DashboardSidebarComponent } from '@features/dashboard/components/dashboard-sidebar/dashboard-sidebar.component';
@@ -35,6 +38,13 @@ interface UnitControlState {
   value: number;
 }
 
+interface EnvironmentMetricCard {
+  title: string;
+  value: string;
+  status: string;
+  icon: string;
+}
+
 @Component({
   selector: 'app-room-control-page',
   standalone: true,
@@ -46,7 +56,9 @@ interface UnitControlState {
 export class RoomControlPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly facade = inject(DashboardFacade);
+  private readonly environmentMockState = inject(DashboardEnvironmentMockService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   user: DashboardUser = {
     displayName: 'Admin',
@@ -55,38 +67,12 @@ export class RoomControlPageComponent implements OnInit {
 
   locationLabel = 'Rooms > Master Suite Emulator';
   room: DashboardRoom | null = null;
+  selectedEnvironmentState: DashboardEnvironmentState | null = null;
 
   availableActuators: VisualActuator[] = [];
   selectedActuatorKey: ActuatorKey | null = null;
 
   private readonly unitStates: Record<string, UnitControlState> = {};
-
-  readonly environmentMetrics = [
-    {
-      title: 'TEMPERATURA',
-      value: '22°C',
-      status: '↗ Optimal Range',
-      icon: 'assets/icons/temperatura.png',
-    },
-    {
-      title: 'HUMEDAD',
-      value: '45%',
-      status: '≈ Stable',
-      icon: 'assets/icons/humedad.png',
-    },
-    {
-      title: 'CO2',
-      value: '800 ppm',
-      status: '◎ Excellent',
-      icon: 'assets/icons/actuador.png',
-    },
-    {
-      title: 'PM2.5',
-      value: '25 μg/m³',
-      status: '◎ Excellent',
-      icon: 'assets/icons/pm.png',
-    },
-  ];
 
   ngOnInit(): void {
     combineLatest([this.facade.viewModel$, this.route.paramMap])
@@ -98,13 +84,59 @@ export class RoomControlPageComponent implements OnInit {
         const roomId = params.get('id');
         this.room = vm.rooms.find((item) => item.id === roomId) ?? null;
 
+        this.environmentMockState.setRooms(vm.rooms);
+
+        if (this.room) {
+          this.environmentMockState.selectRoom(this.room.id);
+        }
+
         this.availableActuators = this.room
           ? this.buildAvailableActuators(this.room)
           : [];
 
         this.ensureSelectedActuator();
         this.ensureUnitStates();
+
+        this.cdr.markForCheck();
       });
+
+    this.environmentMockState.viewModel$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((environmentVm) => {
+        this.selectedEnvironmentState = environmentVm.selectedState;
+        this.cdr.markForCheck();
+      });
+  }
+
+  get environmentMetrics(): EnvironmentMetricCard[] {
+    const state = this.selectedEnvironmentState;
+
+    return [
+      {
+        title: 'TEMPERATURA',
+        value: state ? `${this.formatOneDecimal(state.temperatureC)}°C` : '--°C',
+        status: state ? this.getTemperatureStatus(state.temperatureC) : 'Sin datos',
+        icon: 'assets/icons/temperatura.png',
+      },
+      {
+        title: 'HUMEDAD',
+        value: state ? `${Math.round(state.humidityPct)}%` : '--%',
+        status: state ? this.getHumidityStatus(state.humidityPct) : 'Sin datos',
+        icon: 'assets/icons/humedad.png',
+      },
+      {
+        title: 'CO2',
+        value: state ? `${Math.round(state.co2Ppm)} ppm` : '-- ppm',
+        status: state ? this.getCo2Status(state.co2Ppm) : 'Sin datos',
+        icon: 'assets/icons/actuador.png',
+      },
+      {
+        title: 'PM2.5',
+        value: state ? `${Math.round(state.pm25UgM3)} μg/m³` : '-- μg/m³',
+        status: state ? this.getPm25Status(state.pm25UgM3) : 'Sin datos',
+        icon: 'assets/icons/pm.png',
+      },
+    ];
   }
 
   get selectedActuator(): VisualActuator | null {
@@ -116,6 +148,11 @@ export class RoomControlPageComponent implements OnInit {
     if (!this.selectedActuatorKey) return [];
     const quantity = this.getActuatorQuantity(this.selectedActuatorKey);
     return Array.from({ length: quantity }, (_, index) => index + 1);
+  }
+
+  get simpleUnitPlaceholders(): number[] {
+    const missingSlots = Math.max(0, 3 - this.selectedUnits.length);
+    return Array.from({ length: missingSlots }, (_, index) => index + 1);
   }
 
   get roomImage(): string {
@@ -148,17 +185,17 @@ export class RoomControlPageComponent implements OnInit {
   }
 
   getPanelIcon(): string {
-  switch (this.selectedActuatorKey) {
-    case 'minisplit':
-      return 'assets/icons/copoon.png';     // <- minisplit
-    case 'purifier':
-      return 'assets/icons/purifion.png';   // <- purifier
-    case 'extractor':
-      return 'assets/icons/aireon.png';     // <- extractor
-    default:
-      return 'assets/icons/actuador.png';
+    switch (this.selectedActuatorKey) {
+      case 'minisplit':
+        return 'assets/icons/copoon.png';
+      case 'purifier':
+        return 'assets/icons/purifion.png';
+      case 'extractor':
+        return 'assets/icons/aireon.png';
+      default:
+        return 'assets/icons/actuador.png';
+    }
   }
-}
 
   getActuatorSize(type: ActuatorKey): 'small' | 'medium' | 'large' {
     if (!this.room) return 'small';
@@ -210,73 +247,144 @@ export class RoomControlPageComponent implements OnInit {
     }
   }
 
-  get simpleUnitPlaceholders(): number[] {
-  const missingSlots = Math.max(0, 3 - this.selectedUnits.length);
-  return Array.from({ length: missingSlots }, (_, index) => index + 1);
-}
-
-isUnitOn(index: number): boolean {
-  if (!this.selectedActuatorKey) return false;
-  return this.getUnitState(this.selectedActuatorKey, index).on;
-}
-
-toggleUnit(index: number): void {
-  if (!this.selectedActuatorKey) return;
-
-  const key = this.buildUnitKey(this.selectedActuatorKey, index);
-  const current = this.unitStates[key] ?? { on: false, value: 24 };
-
-  this.unitStates[key] = {
-    ...current,
-    on: !current.on,
-  };
-}
-
-getUnitValue(index: number): number {
-  if (!this.selectedActuatorKey) return 24;
-  return this.getUnitState(this.selectedActuatorKey, index).value;
-}
-
-setUnitValue(index: number, event: Event): void {
-  if (!this.selectedActuatorKey) return;
-
-  const target = event.target as HTMLInputElement;
-  const key = this.buildUnitKey(this.selectedActuatorKey, index);
-  const current = this.unitStates[key] ?? { on: false, value: 24 };
-
-  this.unitStates[key] = {
-    ...current,
-    value: Number(target.value),
-  };
-}
-
-areAllSelectedUnitsOn(): boolean {
-  if (!this.selectedActuatorKey || this.selectedUnits.length === 0) {
-    return false;
+  isUnitOn(index: number): boolean {
+    if (!this.selectedActuatorKey) return false;
+    return this.getUnitState(this.selectedActuatorKey, index).on;
   }
 
-  return this.selectedUnits.every((unit) => this.isUnitOn(unit));
-}
+  toggleUnit(index: number): void {
+    if (!this.selectedActuatorKey) return;
 
-toggleAllSelected(): void {
-  if (!this.selectedActuatorKey) return;
-
-  const shouldTurnOff = this.areAllSelectedUnitsOn();
-
-  for (const unit of this.selectedUnits) {
-    const key = this.buildUnitKey(this.selectedActuatorKey, unit);
+    const key = this.buildUnitKey(this.selectedActuatorKey, index);
     const current = this.unitStates[key] ?? { on: false, value: 24 };
 
     this.unitStates[key] = {
       ...current,
-      on: !shouldTurnOff,
+      on: !current.on,
     };
   }
-}
 
-activateAllSelected(): void {
-  this.toggleAllSelected();
+  getUnitValue(index: number): number {
+    if (!this.selectedActuatorKey) return 24;
+    return this.getUnitState(this.selectedActuatorKey, index).value;
+  }
+
+  setUnitValue(index: number, event: Event): void {
+    if (!this.selectedActuatorKey) return;
+
+    const target = event.target as HTMLInputElement;
+    const key = this.buildUnitKey(this.selectedActuatorKey, index);
+    const current = this.unitStates[key] ?? { on: false, value: 24 };
+
+    this.unitStates[key] = {
+      ...current,
+      value: Number(target.value),
+    };
+  }
+getTemperaturePercent(value: number, min: number, max: number): number {
+  if (max <= min) {
+    return 0;
+  }
+
+  const percent = ((value - min) / (max - min)) * 100;
+
+  return Math.max(0, Math.min(100, percent));
 }
+  areAllSelectedUnitsOn(): boolean {
+    if (!this.selectedActuatorKey || this.selectedUnits.length === 0) {
+      return false;
+    }
+
+    return this.selectedUnits.every((unit) => this.isUnitOn(unit));
+  }
+
+  toggleAllSelected(): void {
+    if (!this.selectedActuatorKey) return;
+
+    const shouldTurnOff = this.areAllSelectedUnitsOn();
+
+    for (const unit of this.selectedUnits) {
+      const key = this.buildUnitKey(this.selectedActuatorKey, unit);
+      const current = this.unitStates[key] ?? { on: false, value: 24 };
+
+      this.unitStates[key] = {
+        ...current,
+        on: !shouldTurnOff,
+      };
+    }
+  }
+
+  activateAllSelected(): void {
+    this.toggleAllSelected();
+  }
+
+  private getTemperatureStatus(value: number): string {
+    if (value < 20) {
+      return '↘ Frío';
+    }
+
+    if (value <= 26) {
+      return '↗ Optimal Range';
+    }
+
+    if (value <= 29) {
+      return '≈ Cálido';
+    }
+
+    return '⚠ Alta';
+  }
+
+  private getHumidityStatus(value: number): string {
+    if (value < 40) {
+      return '↘ Baja';
+    }
+
+    if (value <= 60) {
+      return '≈ Stable';
+    }
+
+    if (value <= 75) {
+      return '↗ Alta';
+    }
+
+    return '⚠ Muy alta';
+  }
+
+  private getCo2Status(value: number): string {
+    if (value <= 700) {
+      return '◎ Excellent';
+    }
+
+    if (value <= 950) {
+      return '≈ Stable';
+    }
+
+    if (value <= 1200) {
+      return '↗ Alto';
+    }
+
+    return '⚠ Crítico';
+  }
+
+  private getPm25Status(value: number): string {
+    if (value <= 20) {
+      return '◎ Excellent';
+    }
+
+    if (value <= 40) {
+      return '≈ Stable';
+    }
+
+    if (value <= 60) {
+      return '↗ Alto';
+    }
+
+    return '⚠ Crítico';
+  }
+
+  private formatOneDecimal(value: number): string {
+    return value.toFixed(1);
+  }
 
   private ensureSelectedActuator(): void {
     const selectedStillExists = this.availableActuators.some(
@@ -318,45 +426,45 @@ activateAllSelected(): void {
     return `${type}-${index}`;
   }
 
- private buildAvailableActuators(room: DashboardRoom): VisualActuator[] {
-  const items: VisualActuator[] = [];
+  private buildAvailableActuators(room: DashboardRoom): VisualActuator[] {
+    const items: VisualActuator[] = [];
 
-  if ((room.actuators.minisplit.quantity ?? 0) > 0) {
-    items.push({
-      key: 'minisplit',
-      label: 'Sistema Minisplit',
-      quantity: room.actuators.minisplit.quantity,
-      iconOn: 'assets/icons/copoon.png',
-      iconOff: 'assets/icons/copooff.png',
-      top: '14px',
-      right: '18px',
-    });
+    if ((room.actuators.minisplit.quantity ?? 0) > 0) {
+      items.push({
+        key: 'minisplit',
+        label: 'Sistema Minisplit',
+        quantity: room.actuators.minisplit.quantity,
+        iconOn: 'assets/icons/copoon.png',
+        iconOff: 'assets/icons/copooff.png',
+        top: '14px',
+        right: '18px',
+      });
+    }
+
+    if ((room.actuators.purifier.quantity ?? 0) > 0) {
+      items.push({
+        key: 'purifier',
+        label: 'Purificador de Aire',
+        quantity: room.actuators.purifier.quantity,
+        iconOn: 'assets/icons/purifion.png',
+        iconOff: 'assets/icons/purifioff.png',
+        bottom: '18px',
+        left: '18px',
+      });
+    }
+
+    if ((room.actuators.extractor.quantity ?? 0) > 0) {
+      items.push({
+        key: 'extractor',
+        label: 'Extractor de Aire',
+        quantity: room.actuators.extractor.quantity,
+        iconOn: 'assets/icons/aireon.png',
+        iconOff: 'assets/icons/aireoff.png',
+        bottom: '18px',
+        right: '18px',
+      });
+    }
+
+    return items;
   }
-
-  if ((room.actuators.purifier.quantity ?? 0) > 0) {
-    items.push({
-      key: 'purifier',
-      label: 'Purificador de Aire',
-      quantity: room.actuators.purifier.quantity,
-      iconOn: 'assets/icons/purifion.png',
-      iconOff: 'assets/icons/purifioff.png',
-      bottom: '18px',
-      left: '18px',
-    });
-  }
-
-  if ((room.actuators.extractor.quantity ?? 0) > 0) {
-    items.push({
-      key: 'extractor',
-      label: 'Extractor de Aire',
-      quantity: room.actuators.extractor.quantity,
-      iconOn: 'assets/icons/aireon.png',
-      iconOff: 'assets/icons/aireoff.png',
-      bottom: '18px',
-      right: '18px',
-    });
-  }
-
-  return items;
-}
 }

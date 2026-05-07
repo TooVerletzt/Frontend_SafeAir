@@ -444,19 +444,80 @@
 }
 
 .actuator-slider {
+  --indicator-top: 24px;
+  --indicator-font-size: 13px;
+  --indicator-height: 24px;
+
+  display: grid;
+  gap: 8px;
+}
+
+.actuator-slider__control {
+  position: relative;
+  padding-bottom: 28px;
+
   input[type='range'] {
     width: 100%;
     accent-color: #1ff7d1;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
   }
+}
 
-  &__labels {
-    margin-top: -2px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 16px;
-    color: #9fa7d0;
-    font-weight: 700;
-  }
+.actuator-slider__temperature-indicator {
+  position: absolute;
+  top: var(--indicator-top);
+  transform: translateX(-50%);
+
+  min-width: 48px;
+  height: var(--indicator-height);
+  padding: 0 8px;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(31, 247, 209, 0.22), transparent 55%),
+    rgba(17, 20, 36, 0.96);
+  border: 1px solid rgba(31, 247, 209, 0.62);
+  color: #bffff5;
+
+  font-size: var(--indicator-font-size);
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+
+  box-shadow:
+    0 0 0 1px rgba(31, 247, 209, 0.08),
+    0 0 12px rgba(31, 247, 209, 0.24);
+
+  pointer-events: none;
+  z-index: 1;
+}
+
+.actuator-slider__temperature-indicator::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%) rotate(45deg);
+  background: rgba(17, 20, 36, 0.96);
+  border-left: 1px solid rgba(31, 247, 209, 0.62);
+  border-top: 1px solid rgba(31, 247, 209, 0.62);
+}
+
+.actuator-slider__labels {
+  margin-top: -35px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #9fa7d0;
+  font-weight: 700;
 }
 
 .activate-all-button {

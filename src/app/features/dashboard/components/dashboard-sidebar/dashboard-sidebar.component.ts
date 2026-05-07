@@ -26,7 +26,7 @@ export class DashboardSidebarComponent {
     { label: 'Dashboard', iconSrc: 'assets/icons/area.png', to: '/dashboard-view' },
     { label: 'Cuartos', iconSrc: 'assets/icons/cuarto.png', to: '/rooms' },
 
-    { label: 'Configuración', iconSrc: 'assets/icons/escudo.png', to: '/settings' },
+    { label: 'Configuración', iconSrc: 'assets/icons/tuerca.svg', to: '/settings' },
   ];
 
   constructor(private readonly router: Router) {}

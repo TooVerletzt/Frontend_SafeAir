@@ -15,7 +15,6 @@ import { AuthError } from '@features/auth/domain/models/auth-error.model';
 import { AuthLinkComponent } from '@shared/ui/form-button/auth-link.component';
 import { PrimaryButtonComponent } from '@shared/ui/form-button/primary-button.component';
 import { FormInputComponent } from '@shared/ui/form-input/form-input.component';
-import { PasswordInputComponent } from '@shared/ui/form-input/password-input.component';
 import { focusFirstInvalidControl } from '@shared/utils/a11y-focus.utils';
 import { emailLikeValidator, minTrimmedLengthValidator } from '@shared/validators/auth-form.validators';
 
@@ -31,7 +30,6 @@ type LoginFormShape = {
     NgIf,
     ReactiveFormsModule,
     FormInputComponent,
-    PasswordInputComponent,
     PrimaryButtonComponent,
     AuthLinkComponent,
   ],
@@ -44,6 +42,8 @@ export class LoginFormComponent implements OnChanges {
   @Input() error: AuthError | null = null;
 
   @Output() submitCredentials = new EventEmitter<AuthCredentials>();
+
+  showPassword = false;
 
   readonly form = new FormGroup<LoginFormShape>({
     identifier: new FormControl('', {
@@ -72,6 +72,10 @@ export class LoginFormComponent implements OnChanges {
 
   get passwordControl(): FormControl<string> {
     return this.form.controls.password;
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   onSubmit(): void {

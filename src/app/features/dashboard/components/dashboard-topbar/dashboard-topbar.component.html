@@ -1,9 +1,9 @@
 <header class="dashboard-topbar">
   <div class="dashboard-topbar__breadcrumb">
-    <span>Rooms</span>
-    <span class="sep">&gt;</span>
-    <span class="current">Master Suite Emulator</span>
-  </div>
+  <span>{{ breadcrumbRoot }}</span>
+  <span class="sep">&gt;</span>
+  <span class="current">{{ breadcrumbCurrent }}</span>
+</div>
 
   <div class="dashboard-topbar__actions">
     <div class="dashboard-topbar__date-wrapper" *ngIf="showDateTimeFilter">

@@ -45,6 +45,8 @@ export class DashboardTopbarComponent {
   searchMessage = '';
 
   @Input() locationLabel = 'Dashboard';
+  @Input() breadcrumbRoot = 'Inicio';
+  @Input() breadcrumbCurrent = 'Configuración de cuartos ';
   @Input() selectedDate = '';
   @Input() selectedTime = '';
   @Input() showDateTimeFilter = false;
